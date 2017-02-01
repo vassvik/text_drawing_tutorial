@@ -31,6 +31,8 @@ int main()
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
+
+    glfwTerminate();
     
     return 0;
 }
