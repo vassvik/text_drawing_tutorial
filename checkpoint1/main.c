@@ -1,12 +1,10 @@
 #include <stdio.h> // printf, fprintf, stderr
-
 #include <GLFW/glfw3.h>
 
-// This function is called internally by GLFW whenever an error occur.
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
+
+GLFWwindow* window;
+
+void error_callback(int error, const char* description);
 
 int main()
 {
@@ -17,7 +15,7 @@ int main()
 
     glfwSetErrorCallback(error_callback);
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
+    window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -2;
@@ -31,4 +29,10 @@ int main()
     }
     
     return 0;
+}
+
+// This function is called internally by GLFW whenever an error occur.
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
 }

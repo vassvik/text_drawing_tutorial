@@ -1,17 +1,49 @@
 #include <stdio.h> // printf, fprintf, stderr, sprintf
 #include <math.h>  // sqrt
-
 #include <GLFW/glfw3.h>
 
 
-GLFWwindow* window;;
+GLFWwindow* window;
 
+void error_callback(int error, const char* description);
+void calculate_frame_timings();
 
+int main()
+{
+    if (!glfwInit()) {
+        printf("Error initializeing GLFW\n");
+        return -1;
+    }
+
+    glfwSetErrorCallback(error_callback);
+
+    window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        return -2;
+    }
+    glfwMakeContextCurrent(window); 
+    glfwSwapInterval(0);
+
+    while (!glfwWindowShouldClose(window)) {
+        calculate_frame_timings();
+
+        glfwPollEvents();
+        glfwSwapBuffers(window);
+    }
+    
+    return 0;
+}
+
+// This function is called internally by GLFW whenever an error occur.
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
+// This function will calculate the average frame time and its standard deviation
+// About once every second it will display the average in the window title and 
+// restart the counting. 
 void calculate_frame_timings()
 {
     static double t1 = 0.0;
@@ -44,31 +76,4 @@ void calculate_frame_timings()
         avg_dt2 = 0.0;
         avg_counter = 0;
     }
-}
-
-int main()
-{
-    if (!glfwInit()) {
-        printf("Error initializeing GLFW\n");
-        return -1;
-    }
-
-    glfwSetErrorCallback(error_callback);
-
-    window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        return -2;
-    }
-    glfwMakeContextCurrent(window); 
-    glfwSwapInterval(0);
-
-    while (!glfwWindowShouldClose(window)) {
-        calculate_frame_timings();
-
-        glfwPollEvents();
-        glfwSwapBuffers(window);
-    }
-    
-    return 0;
 }
