@@ -1,4 +1,5 @@
 #include <stdio.h> // fprintf, stderr
+
 #include <GLFW/glfw3.h>
 
 // global variables

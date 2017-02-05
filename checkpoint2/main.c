@@ -1,6 +1,7 @@
 #include <stdio.h>  // fprintf, sprintf, stderr
 #include <stdlib.h> // exit
 #include <math.h>   // sqrt
+
 #include <GLFW/glfw3.h>
 
 GLFWwindow* window;
