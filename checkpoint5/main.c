@@ -89,28 +89,29 @@ void setup()
 {
     program = load_shaders("vertex_shader.vs", "fragment_shader.fs");
 
+    // create vao
     glGenVertexArrays(1, &vertex_array_object);
     glBindVertexArray(vertex_array_object);
 
+    // create vbo for vertex position, 2 quads (4 triangles)
     num_vertices = 12;
     GLfloat vertex_buffer_pos_data[] = {
-       -1.0f, -1.0f,
+       -1.0f, -1.0f,  // left quad, first triangle (lower left)
        -0.1f, -1.0f,
        -1.0f,  1.0f,
 
-       -1.0f,  1.0f,
+       -1.0f,  1.0f,  // left quad, second triangle (upper right)
        -0.1f, -1.0f,
        -0.1f,  1.0f,
 
-        0.1f, -1.0f,
+        0.1f, -1.0f,  // second quad, first triangle (lower left)
         1.0f, -1.0f,
         0.1f,  1.0f,
 
-        0.1f,  1.0f,
+        0.1f,  1.0f,  // second quad, second triangle (upper right)
         1.0f, -1.0f,
         1.0f,  1.0f,
     };
-
 
     glGenBuffers(1, &vertex_buffer_object_pos);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_pos);
@@ -119,21 +120,21 @@ void setup()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-
+    // create vbo for vertex uvs
     GLfloat vertex_buffer_uv_data[] = {
-        0.0f, 0.0f, 
-        0.5f, 0.0f, 
+        0.0f, 0.0f,  // left quad, first triangle (lower left)
+        0.5f, 0.0f,  
         0.0f, 1.0f, 
         
-        0.0f, 1.0f, 
+        0.0f, 1.0f,  // left quad, second triangle (upper right)
         0.5f, 0.0f, 
         0.5f, 1.0f, 
         
-        0.5f, 0.0f, 
+        0.5f, 0.0f,  // second quad, first triangle (lower left)
         1.0f, 0.0f, 
         0.5f, 1.0f, 
         
-        0.5f, 1.0f, 
+        0.5f, 1.0f,  // second quad, second triangle (upper right)
         1.0f, 0.0f, 
         1.0f, 1.0f, 
     };
@@ -145,7 +146,7 @@ void setup()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-
+    // create 2D texture
     int texture_width = 4;
     int texture_height = 4;
     unsigned char texture_data[] = {
@@ -174,6 +175,7 @@ void setup()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+    // upload texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
