@@ -1,0 +1,34 @@
+C
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension c
+    extension ec
+    extension pgc
+    3rd_gen_scale 0.77
+    end_of_line_continuation \\$
+C++
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension C
+    extension c++
+    extension cc
+    extension cpp
+    extension cxx
+    extension pcc
+    3rd_gen_scale 1.51
+    end_of_line_continuation \\$
+C/C++ Header
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension H
+    extension h
+    extension hh
+    extension hpp
+    3rd_gen_scale 1.00
+    end_of_line_continuation \\$
+GLSL
+    filter remove_inline //.*$
+    filter call_regexp_common C++
+    extension vs
+    extension fs
+    3rd_gen_scale 2.00
