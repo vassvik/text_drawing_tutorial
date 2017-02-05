@@ -1,4 +1,4 @@
-#include <stdio.h>  // printf, fprintf, stderr, sprintf
+#include <stdio.h>  // printf, fprintf, stderr, sprintf, FILE, fopen, fclose, fread
 #include <stdlib.h> // malloc, free
 #include <math.h>   // sqrt
 
@@ -195,7 +195,6 @@ void init()
     glfwMakeContextCurrent(window); 
     glfwSwapInterval(0);
 
-    // Call gladLoadGL() to load OpenGL function pointers and symbols
     if(!gladLoadGL()) {
         fprintf(stderr, "Something went wrong while loading GLAD!\n");
         glfwTerminate();
