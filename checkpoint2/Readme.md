@@ -10,6 +10,8 @@ We calculate the average *and* error without having to store all the values (pra
 
 On my (quite beefy) graphics card, the GTX 1070, I get a frame time of 140 µs, which is equivalent to 7142 frames per second! Quite good!
 
+Additionally we will refactor our initialization code and put it into its own function.
+
 ### Code statistics
 
 Output from [cloc](https://github.com/AlDanial/cloc):
@@ -17,6 +19,6 @@ Output from [cloc](https://github.com/AlDanial/cloc):
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-C                                1             17             15             60
+C                                1             18             18             66
 -------------------------------------------------------------------------------
 ```

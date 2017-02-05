@@ -1,29 +1,19 @@
-#include <stdio.h> // fprintf, sprintf, stderr
-#include <math.h>  // sqrt
+#include <stdio.h>  // fprintf, sprintf, stderr
+#include <stdlib.h> // exit
+#include <math.h>   // sqrt
 #include <GLFW/glfw3.h>
 
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
-void error_callback(int error, const char* description);
+void init();
 void calculate_frame_timings();
+void error_callback(int error, const char* description);
 
 int main()
 {
-    if (!glfwInit()) {
-        fprintf(stderr, "Error initializing GLFW\n");
-        return -1;
-    }
-
-    glfwSetErrorCallback(error_callback);
-
-    window = glfwCreateWindow(resx, resy, "Title", NULL, NULL);
-    if (!window) {
-        glfwTerminate();
-        return -2;
-    }
-    glfwMakeContextCurrent(window); 
-    glfwSwapInterval(0);
+    // we move all the initialization step into a function for brevity
+    init();
 
     while (!glfwWindowShouldClose(window)) {
         // we add a timings functions, to calcualate the time it takes 
@@ -39,9 +29,24 @@ int main()
     return 0;
 }
 
-void error_callback(int error, const char* description)
+// we'll put all future additional initialization of GLFW 
+// and similar functionality in here
+void init()
 {
-    fprintf(stderr, "Error: %s (%d)\n", description, error);
+    if (!glfwInit()) {
+        fprintf(stderr, "Error initializing GLFW\n");
+        exit(-1); // replace return with exit
+    }
+
+    glfwSetErrorCallback(error_callback);
+
+    window = glfwCreateWindow(resx, resy, "Title", NULL, NULL);
+    if (!window) {
+        glfwTerminate();
+        exit(-2);
+    }
+    glfwMakeContextCurrent(window); 
+    glfwSwapInterval(0);
 }
 
 // this function will calculate the average frame time and its variation.
@@ -89,4 +94,9 @@ void calculate_frame_timings()
         avg_dt2 = 0.0;
         counter = 0;
     }
+}
+
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s (%d)\n", description, error);
 }

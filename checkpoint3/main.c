@@ -1,6 +1,6 @@
-#include <stdio.h> // printf, fprintf, stderr, sprintf
+#include <stdio.h>  // printf, fprintf, stderr, sprintf
 #include <stdlib.h> // malloc, free
-#include <math.h>  // sqrt
+#include <math.h>   // sqrt
 
 #include <glad/glad.h>
 #include <glad/glad.c>
