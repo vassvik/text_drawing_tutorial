@@ -92,19 +92,19 @@ void setup()
     // make 4 triangles this time, which makes up 2 rectangles
     num_vertices = 12;
     GLfloat vertex_buffer_pos_data[] = {
-       -1.0f, -1.0f,
+       -1.0f, -1.0f, // left quad, first triangle (lower left)
        -0.1f, -1.0f,
        -1.0f,  1.0f,
 
-       -1.0f,  1.0f,
+       -1.0f,  1.0f, // left quad, second triangle (upper right)
        -0.1f, -1.0f,
        -0.1f,  1.0f,
 
-        0.1f, -1.0f,
+        0.1f, -1.0f, // second quad, first triangle (lower left)
         1.0f, -1.0f,
         0.1f,  1.0f,
 
-        0.1f,  1.0f,
+        0.1f,  1.0f, // second quad, second triangle (upper right)
         1.0f, -1.0f,
         1.0f,  1.0f,
     };
