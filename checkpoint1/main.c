@@ -1,4 +1,4 @@
-#include <stdio.h> // printf, fprintf, stderr
+#include <stdio.h> // fprintf, stderr
 #include <GLFW/glfw3.h>
 
 // global variables
@@ -7,7 +7,6 @@
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
-// function declarations
 void error_callback(int error, const char* description);
 
 int main()
