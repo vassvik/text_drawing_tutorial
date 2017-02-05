@@ -1,40 +1,61 @@
 #include <stdio.h> // printf, fprintf, stderr
 #include <GLFW/glfw3.h>
 
-
+// global variables
+// we'll use global variables, since the GLFW callback functions we will add
+// later will require access to these variables. 
 GLFWwindow* window;
+double resx = 640, resy = 480;
 
+// function declarations
 void error_callback(int error, const char* description);
 
 int main()
 {
+    // initialize all the internal state of GLFW
     if (!glfwInit()) {
-        printf("Error initializeing GLFW\n");
+        fprintf(stderr, "Error initializing GLFW\n");
         return -1;
     }
 
+    // tell GLFW to call error_callback if an internal error ever occur later
     glfwSetErrorCallback(error_callback);
 
-    window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
-    if (!window) {
+    // create the window
+    window = glfwCreateWindow(resx, resy, "Title", NULL, NULL);
+
+    // check if the opening of the window failed whatever reason
+    // and clean up
+    if (!window) { 
         glfwTerminate();
         return -2;
     }
-    glfwMakeContextCurrent(window); 
-    glfwSwapInterval(0); // disable v-sync for now
 
+    // in principle we can have multiple windows, 
+    // so we set the newly created on as "current"
+    glfwMakeContextCurrent(window);
+
+    // disable v-sync for now, if possible
+    glfwSwapInterval(0);
+
+    // main loop
     while (!glfwWindowShouldClose(window)) {
+        // listen for events (keyboard, mouse, etc.). ignored for now, but useful later
         glfwPollEvents();
+
+        // swap buffers (replace the old image with a new one)
+        // this won't have any visible effect until we add actual drawing
         glfwSwapBuffers(window);
     }
 
+    // clean up
     glfwTerminate();
     
     return 0;
 }
 
-// This function is called internally by GLFW whenever an error occur.
+// this function is called internally by GLFW whenever an error occur.
 void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+    fprintf(stderr, "Error: %s (%d)\n", description, error);
 }
