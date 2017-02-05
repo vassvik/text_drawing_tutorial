@@ -41,7 +41,7 @@ int main()
 
 void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+    fprintf(stderr, "Error: %s (%d)\n", description, error);
 }
 
 // this function will calculate the average frame time and its variation.

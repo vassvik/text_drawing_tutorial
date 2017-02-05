@@ -11,6 +11,8 @@ Compile and link with
 gcc main.c -lglfw3
 ```
 
+### Code statistics
+
 Output from [cloc](https://github.com/AlDanial/cloc):
 ```
 -------------------------------------------------------------------------------
