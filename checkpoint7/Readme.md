@@ -1,4 +1,4 @@
-# Checkpoint 7
+# Checkpoint 7 -- Using the font bitmap
 
 Starting from checkpoint 6. 
 

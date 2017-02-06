@@ -1,4 +1,4 @@
-# Checkpoint 6
+# Checkpoint 6 -- Read a .ttf file!
 
 Starting from checkpoint 5. 
 
