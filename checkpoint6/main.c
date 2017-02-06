@@ -28,11 +28,11 @@ void init();
 void setup();
 void draw();
 void calculate_frame_timings();
-void error_callback(int error, const char* description);
+void error_callback(int error, const char *description);
 
 char *read_entire_file(const char *filename);
-int compile_shader(const char * file_path, GLuint shader_ID);
-GLuint load_shaders(const char * vertex_file_path, const char * fragment_file_path);
+int compile_shader(const char *file_path, GLuint shader_ID);
+GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path);
 
 int main()
 {
@@ -277,7 +277,7 @@ void calculate_frame_timings()
     }
 }
 
-void error_callback(int error, const char* description)
+void error_callback(int error, const char *description)
 {
     fprintf(stderr, "Error: %s (%d)\n", description, error);
 }
@@ -301,7 +301,7 @@ char *read_entire_file(const char *filename) {
     return string;
 }
 
-int compile_shader(const char * file_path, GLuint shader_ID) {
+int compile_shader(const char *file_path, GLuint shader_ID) {
     char *shader_code = read_entire_file(file_path);
     if (shader_code == NULL) {
         fprintf(stderr, "Error: Could not read shader file: \"%s\"\n", file_path);
@@ -331,7 +331,7 @@ int compile_shader(const char * file_path, GLuint shader_ID) {
     return 0;
 }
 
-GLuint load_shaders(const char * vertex_file_path,const char * fragment_file_path){
+GLuint load_shaders(const char *vertex_file_path,const char *fragment_file_path){
     GLuint vertex_shader_ID   = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragment_shader_ID = glCreateShader(GL_FRAGMENT_SHADER);
 

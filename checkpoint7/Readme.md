@@ -9,3 +9,18 @@ Since we only need 1 color component for the texture, we change from GL_RGB to G
 Note that both letters are upside down. We also added one layer of padding at the right and bottom side. This will be important later. 
 
 Each glyph fills the whole rectangle, which make them look distorted. This is due to the packing algorithm used by stb_truetype.h. We can use the character data given to appropriately scale and offset our glyph to make them proportional in size. 
+
+
+### Code statistics
+
+Output from [cloc](https://github.com/AlDanial/cloc):
+```
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                1             81              3            247
+GLSL                             2              7              0             17
+-------------------------------------------------------------------------------
+SUM:                             3             88              3            264
+-------------------------------------------------------------------------------
+```
