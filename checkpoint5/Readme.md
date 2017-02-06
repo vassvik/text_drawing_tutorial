@@ -6,6 +6,8 @@ We add a texture, and sample it for the color instead of a color index. We chang
 
 We use a small texture of size 4x4, with each texel having its own unique color. We set up the UV coordinates such that half the texture left part of the texture is on the left rectangle, and vice versa.
 
+Shaders are adjusted appropriately.
+
 ### Illustration
 The following illustration shows what UV coordinates corresponds to each color in the texture.
 

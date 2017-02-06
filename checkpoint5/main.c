@@ -26,7 +26,7 @@ void error_callback(int error, const char* description);
 
 char *read_entire_file(const char *filename);
 int compile_shader(const char * file_path, GLuint shader_ID);
-GLuint load_shaders(const char * vertex_file_path,const char * fragment_file_path);
+GLuint load_shaders(const char * vertex_file_path, const char * fragment_file_path);
 
 int main()
 {
@@ -191,6 +191,7 @@ void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     
+    glUseProgram(program);
     glBindVertexArray(vertex_array_object);
 
     glActiveTexture(GL_TEXTURE0);
