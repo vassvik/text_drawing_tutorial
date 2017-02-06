@@ -11,7 +11,7 @@ Shaders are adjusted appropriately.
 ### Illustration
 The following illustration shows what UV coordinates corresponds to each color in the texture.
 
-![illustration!](illustration.png)
+![illustration!](../illustration.png)
 
 
 ### Code statistics

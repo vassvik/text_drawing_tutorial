@@ -7,7 +7,7 @@ We now begin the real work! Instead of using a toy texture, we can generate a re
 
 ### Font bitmap
 
-![font!](font.png)
+![font!](../font.png)
 
 
 ### Code statistics
