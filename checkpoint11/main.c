@@ -7,6 +7,9 @@
 
 #include <GLFW/glfw3.h>
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#include <stb_truetype.h>
+
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
@@ -15,6 +18,7 @@ GLuint vertex_array_object;
 GLuint vertex_buffer_quad;
 GLuint vertex_buffer_instances;
 
+GLuint texture_bitmap;
 GLuint texture_metadata;
 GLuint texture_colors;
 
@@ -120,8 +124,8 @@ void setup()
     // instance VBO
     num_instances = 2;
     GLfloat vertex_buffer_instances_data[] = {
-        -1.0, -1.0, 0.0, 0.0,
-         0.0,  0.0, 1.0, 1.0
+        -1.0, -1.0, 'y'-32.0, 0.0,
+         0.0,  0.0, 'G'-32.0, 1.0
     };
 
     glGenBuffers(1, &vertex_buffer_instances);
@@ -132,23 +136,72 @@ void setup()
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glVertexAttribDivisor(1, 1); // instanced: advanced every instance
 
-    // metadata texture, texture unit 0
-    // we'll ignore the last two values values for now, so just put in placeholder zeroes
-    int num_glyphs = 2;
-    GLfloat metadata[] = {
-        0.45, 0.75, 0.0, 0.0,
-        0.65, 0.3, 0.0, 0.0
-    };
+
+    // get font data
+    int font_bitmap_width = 512;
+    int font_bitmap_height = 256;
+    int font_size = 48.0;
+
+    int ttf_size_max = 1e6;
+    unsigned char *ttf_buffer = malloc(ttf_size_max); // sufficient size for consola.ttf
+
+    FILE *fp = fopen("../consola.ttf", "rb");
+    fread(ttf_buffer, 1, ttf_size_max, fp);
+    fclose(fp);
+    
+    unsigned char *bitmap = malloc(font_bitmap_height*font_bitmap_width);
+    stbtt_pack_context pc;
+    stbtt_packedchar cdata[96]; 
+
+    stbtt_PackBegin(&pc, bitmap, font_bitmap_width, font_bitmap_height, 0, 1, NULL);   
+    stbtt_PackSetOversampling(&pc, 1, 1);
+    stbtt_PackFontRange(&pc, ttf_buffer, 0, font_size, 32, 96, cdata);
+    stbtt_PackEnd(&pc);
+
+    free(ttf_buffer);
+
+    // bitmap texture, texture unit 0
+    glGenTextures(1, &texture_bitmap);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_bitmap);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, font_bitmap_width, font_bitmap_height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+
+    free(bitmap);
+
+    // metadata texture, texture unit 1
+    // we fill this with (x0, y0, x1-x0, y1-x0) and (xoff, yoff, xoff2, yoff2) that we get from stb_truetype.h
+    // in two rows. (x0, y0, x1-x0, y1-x0) om the first row, and (xoff, yoff, xoff2, yoff2) in the second row
+    // these will be normalized
+    int num_glyphs = 96;
+
+    GLfloat metadata[num_glyphs*4*2];
+    for (int i = 0; i < num_glyphs; i++) {
+        metadata[4*i+0] = cdata[i].x0/(double)font_bitmap_width;
+        metadata[4*i+1] = cdata[i].y0/(double)font_bitmap_height;
+        metadata[4*i+2] = (cdata[i].x1-cdata[i].x0)/(double)font_bitmap_width;
+        metadata[4*i+3] = (cdata[i].y1-cdata[i].y0)/(double)font_bitmap_height;
+
+        metadata[4*num_glyphs + 4*i+0] = cdata[i].xoff/(double)font_bitmap_width;
+        metadata[4*num_glyphs + 4*i+1] = cdata[i].yoff/(double)font_bitmap_height;
+        metadata[4*num_glyphs + 4*i+2] = (cdata[i].xoff2-cdata[i].xoff)/(double)font_bitmap_width;
+        metadata[4*num_glyphs + 4*i+3] = (cdata[i].yoff2-cdata[i].yoff)/(double)font_bitmap_height;
+    }
 
     glGenTextures(1, &texture_metadata);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_1D, texture_metadata);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA32F, num_glyphs, 0, GL_RGBA, GL_FLOAT, metadata);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, texture_metadata);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, num_glyphs, 2, 0, GL_RGBA, GL_FLOAT, metadata);
 
-    // color texture, texture unit 1
+    // color texture, texture unit 2
     int num_colors = 16;
     unsigned char colors[] = {
         255, 152,   0, // orange
@@ -173,19 +226,22 @@ void setup()
     };
 
     glGenTextures(1, &texture_colors);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_1D, texture_colors);
     glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, num_colors, 0, GL_RGB, GL_UNSIGNED_BYTE, colors);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
-    // write texture units to shader
+
+    // write constant uniforms to shader
     glUseProgram(program);
-    glUniform1i(glGetUniformLocation(program, "sampler_meta"), 0);
-    glUniform1i(glGetUniformLocation(program, "sampler_colors"), 1);
+    glUniform1i(glGetUniformLocation(program, "sampler_bitmap"), 0);
+    glUniform1i(glGetUniformLocation(program, "sampler_metadata"), 1);
+    glUniform1i(glGetUniformLocation(program, "sampler_colors"), 2);
     glUniform1f(glGetUniformLocation(program, "num_glyphs"), num_glyphs);
     glUniform1f(glGetUniformLocation(program, "num_colors"), num_colors);
+    glUniform2f(glGetUniformLocation(program, "resolution_bitmap"), font_bitmap_width, font_bitmap_height);
 }
 
 void draw()
@@ -196,8 +252,10 @@ void draw()
     glBindVertexArray(vertex_array_object);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_1D, texture_metadata);
+    glBindTexture(GL_TEXTURE_2D, texture_bitmap);
     glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture_metadata);
+    glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_1D, texture_colors);
 
     glDrawArraysInstanced(GL_TRIANGLES, 0, num_vertices, num_instances);
