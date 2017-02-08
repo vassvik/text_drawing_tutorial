@@ -1,4 +1,4 @@
-# Checkpoint 8 -- Changing gears: instancing
+# Checkpoint 9 -- Changing gears: instancing
 
 Currently, to render a single glyph we do the following:
 

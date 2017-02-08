@@ -15,6 +15,9 @@ GLuint vertex_array_object;
 GLuint vertex_buffer_quad;
 GLuint vertex_buffer_instances;
 
+GLuint texture_metadata;
+GLuint texture_colors;
+
 int num_vertices;
 int num_instances;
 
@@ -118,7 +121,7 @@ void setup()
     num_instances = 2;
     GLfloat vertex_buffer_instances_data[] = {
         -1.0, -1.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 1.0
+         0.0,  0.0, 1.0, 1.0
     };
 
     glGenBuffers(1, &vertex_buffer_instances);
@@ -128,6 +131,61 @@ void setup()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glVertexAttribDivisor(1, 1); // instanced: advanced every instance
+
+    // metadata texture, texture unit 0
+    // we'll ignore the last two values values for now, so just put in placeholder zeroes
+    int num_glyphs = 2;
+    GLfloat metadata[] = {
+        0.45, 0.75, 0.0, 0.0,
+        0.65, 0.3, 0.0, 0.0
+    };
+
+    glGenTextures(1, &texture_metadata);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_1D, texture_metadata);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, num_glyphs, 0, GL_RGBA, GL_FLOAT, metadata);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+    // color texture, texture unit 1
+    int num_colors = 16;
+    unsigned char colors[] = {
+        255, 152,   0, // orange
+        156,  39, 176, // purple
+          3, 169, 244, // light blue
+        139, 195,  74, // light green
+
+        255,  87,  34, // deep orange
+        103,  58, 183, // deep purple
+          0, 188, 212, // cyan
+        205, 220,  57, // lime
+
+        244,  67,  54, // red
+         63,  81, 181, // indigo
+          0, 150, 137, // teal
+        255, 235,  59, // yellow
+        
+        233,  30,  99, // pink
+         33, 150, 243, // blue
+         76, 175,  80, // green
+        255, 193,   7, // amber
+    };
+
+    glGenTextures(1, &texture_colors);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_1D, texture_colors);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, num_colors, 0, GL_RGB, GL_UNSIGNED_BYTE, colors);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+    // write texture units to shader
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "sampler_meta"), 0);
+    glUniform1i(glGetUniformLocation(program, "sampler_colors"), 1);
+    glUniform1f(glGetUniformLocation(program, "num_glyphs"), num_glyphs);
+    glUniform1f(glGetUniformLocation(program, "num_colors"), num_colors);
 }
 
 void draw()
@@ -136,6 +194,11 @@ void draw()
     
     glUseProgram(program);
     glBindVertexArray(vertex_array_object);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_1D, texture_metadata);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_1D, texture_colors);
 
     glDrawArraysInstanced(GL_TRIANGLES, 0, num_vertices, num_instances);
 }
