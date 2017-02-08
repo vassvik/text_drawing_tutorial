@@ -19,7 +19,9 @@ Let's not get ahead of ourselves. We'll do this in several steps for pedagogical
 
 We'll temporarily remove all the texture stuff to emphasize the instancing part as cleanly as possible We'll add this back in at a later point. We'll also ignore the third value in the instance buffer, and just focus on getting the quad in the right position. We'll use the fourth value to color them differently
 
-The rest is fairly simple: We'll use `glDrawArraysInstanced` instead of `glDrawArrays`, which takes an additional parameter - the number of instances. We'll use `glVertexAttribDivisor` to tell OpenGL which vertex buffer objects are instanced and which are not. The vertex shader doesn't really know about the instancing, and only sees two vertex attributes, which makes it convenient for us to work with. 
+The rest is fairly simple: We'll use `glDrawArraysInstanced` instead of `glDrawArrays`, which takes an additional parameter - the number of instances. We'll use `glVertexAttribDivisor` to tell OpenGL which vertex buffer objects are instanced and which are not. 
+
+The vertex shader doesn't really know about the instancing, and only sees two vertex attributes, which makes it convenient for us to work with. Currently it only offsets the vertex positions depending on the instanced data, and sends on the color index to the fragment shader, which colors each quad differently. 
 
 
 
@@ -27,5 +29,12 @@ The rest is fairly simple: We'll use `glDrawArraysInstanced` instead of `glDrawA
 
 Output from [cloc](https://github.com/AlDanial/cloc):
 ```
-
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C                                1             62              5            203
+GLSL                             2             10              4             25
+-------------------------------------------------------------------------------
+SUM:                             3             72              9            228
+-------------------------------------------------------------------------------
 ```
