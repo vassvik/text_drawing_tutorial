@@ -1,65 +1,58 @@
-#include <stdio.h>  // fprintf, sprintf, stderr
-#include <stdlib.h> // exit
-#include <math.h>   // sqrt
+#include <stdio.h> // fprintf, stderr
 
 #include <GLFW/glfw3.h>
 
+// global variables
+// we'll use global variables, since the GLFW callback functions we will add
+// later will require access to these variables. 
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
-void init();
-void error_callback(int error, const char* description);
-
+// this function is called internally by GLFW whenever an error occur.
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s (%d)\n", description, error);
+}
 int main()
 {
-    // we move all the initialization step into a function for brevity
-    if (!init()) {
-        printf("Could not init. Exiting\n");
-        return;
-    }
-    
-    // function pointer notation might seem quite daunting at first...
-    void (*glClear)(GLbitfield) = (void (*)(GLbitfield))glfwGetProcAddress("glClear");
-    void (*glClearColor)(GLfloat, GLfloat, GLfloat, GLfloat) = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))glfwGetProcAddress("glClearColor");
-
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-
-        glClear(GL_COLOR_BUFFER_BIT); // actually clear the window
-
-        glfwSwapBuffers(window);
-    }
-
-    glfwTerminate();
-    
-    return 0;
-}
-
-// we'll put all future additional initialization of GLFW 
-// and similar functionality in here
-int init()
-{
+    // initialize all the internal state of GLFW
     if (!glfwInit()) {
         fprintf(stderr, "Error initializing GLFW\n");
         return -1;
     }
 
+    // tell GLFW to call error_callback if an internal error ever occur later
     glfwSetErrorCallback(error_callback);
 
-    if (!window) {
-    window = glfwCreateWindow(resx, resy, "Checkpoint 2: Using OpenGL functions.", NULL, NULL);
+    // create the window
+    window = glfwCreateWindow(resx, resy, "Checkpoint 1: Creating a window.", NULL, NULL);
+
+    // check if the opening of the window failed whatever reason
+    // and clean up
+    if (!window) { 
         glfwTerminate();
         return -2;
     }
 
-    glfwMakeContextCurrent(window); 
+    // in principle we can have multiple windows, 
+    // so we set the newly created on as "current"
+    glfwMakeContextCurrent(window);
+
+    // Enable v-sync for now, if possible
     glfwSwapInterval(1);
 
-    return 0; // success
-}
+    // main loop
+    while (!glfwWindowShouldClose(window)) {
+        // listen for events (keyboard, mouse, etc.). ignored for now, but useful later
+        glfwPollEvents();
 
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s (%d)\n", description, error);
+        // swap buffers (replace the old image with a new one)
+        // this won't have any visible effect until we add actual drawing
+        glfwSwapBuffers(window);
+    }
+
+    // clean up
+    glfwTerminate();
+    
+    return 0;
 }
