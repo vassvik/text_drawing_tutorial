@@ -112,7 +112,7 @@ int compile_shader(const char * file_path, GLuint shader_ID) {
         GLint info_log_length;
         glGetShaderiv(shader_ID, GL_INFO_LOG_LENGTH, &info_log_length);
 
-        char shader_error_message[info_log_length+1];
+        char shader_error_message[9999];
         glGetShaderInfoLog(shader_ID, info_log_length, NULL, shader_error_message);
         fprintf(stderr, "Error while compiling shader \"%s\":\n%s", file_path, shader_error_message);
 
@@ -154,7 +154,7 @@ GLuint load_shaders(const char * vertex_file_path,const char * fragment_file_pat
         GLint info_log_length;
         glGetProgramiv(program_ID, GL_INFO_LOG_LENGTH, &info_log_length);
 
-        GLchar program_error_message[info_log_length+1];
+        GLchar program_error_message[9999];
         glGetProgramInfoLog(program_ID, info_log_length, NULL, program_error_message);
         printf("Error while linking program:\n%s\n", program_error_message);
         

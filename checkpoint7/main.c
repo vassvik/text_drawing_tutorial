@@ -145,20 +145,20 @@ void setup()
     // new UV coordinates to use the part of the texture corresponding to 'y' and 'G'
     GLfloat vertex_buffer_uv_data[] = {
         (cdata['y'-32].x0+0)/(double)font_bitmap_width, (cdata['y'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['y'-32].x1+1)/(double)font_bitmap_width, (cdata['y'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['y'-32].x0+0)/(double)font_bitmap_width, (cdata['y'-32].y1+1)/(double)font_bitmap_height,
+        (cdata['y'-32].x1+0)/(double)font_bitmap_width, (cdata['y'-32].y0+0)/(double)font_bitmap_height,
+        (cdata['y'-32].x0+0)/(double)font_bitmap_width, (cdata['y'-32].y1+0)/(double)font_bitmap_height,
 
-        (cdata['y'-32].x0+0)/(double)font_bitmap_width, (cdata['y'-32].y1+1)/(double)font_bitmap_height,
-        (cdata['y'-32].x1+1)/(double)font_bitmap_width, (cdata['y'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['y'-32].x1+1)/(double)font_bitmap_width, (cdata['y'-32].y1+1)/(double)font_bitmap_height,
+        (cdata['y'-32].x0+0)/(double)font_bitmap_width, (cdata['y'-32].y1+0)/(double)font_bitmap_height,
+        (cdata['y'-32].x1+0)/(double)font_bitmap_width, (cdata['y'-32].y0+0)/(double)font_bitmap_height,
+        (cdata['y'-32].x1+0)/(double)font_bitmap_width, (cdata['y'-32].y1+0)/(double)font_bitmap_height,
         
         (cdata['G'-32].x0+0)/(double)font_bitmap_width, (cdata['G'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['G'-32].x1+1)/(double)font_bitmap_width, (cdata['G'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['G'-32].x0+0)/(double)font_bitmap_width, (cdata['G'-32].y1+1)/(double)font_bitmap_height,
+        (cdata['G'-32].x1+0)/(double)font_bitmap_width, (cdata['G'-32].y0+0)/(double)font_bitmap_height,
+        (cdata['G'-32].x0+0)/(double)font_bitmap_width, (cdata['G'-32].y1+0)/(double)font_bitmap_height,
 
-        (cdata['G'-32].x0+0)/(double)font_bitmap_width, (cdata['G'-32].y1+1)/(double)font_bitmap_height,
-        (cdata['G'-32].x1+1)/(double)font_bitmap_width, (cdata['G'-32].y0+0)/(double)font_bitmap_height,
-        (cdata['G'-32].x1+1)/(double)font_bitmap_width, (cdata['G'-32].y1+1)/(double)font_bitmap_height,
+        (cdata['G'-32].x0+0)/(double)font_bitmap_width, (cdata['G'-32].y1+0)/(double)font_bitmap_height,
+        (cdata['G'-32].x1+0)/(double)font_bitmap_width, (cdata['G'-32].y0+0)/(double)font_bitmap_height,
+        (cdata['G'-32].x1+0)/(double)font_bitmap_width, (cdata['G'-32].y1+0)/(double)font_bitmap_height,
     };
 
     glGenBuffers(1, &vertex_buffer_object_uv);

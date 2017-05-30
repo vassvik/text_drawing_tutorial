@@ -11,7 +11,7 @@
 #include <stb_truetype.h>
 
 GLFWwindow* window;
-double resx = 800, resy = 600;
+double resx = 1600, resy = 900;
 
 GLuint program;
 GLuint vertex_array_object;
@@ -36,14 +36,21 @@ float ascent, descent, linegap, linedist;
 
 void init();
 void setup();
-void draw();
+void draw(int count);
 void calculate_frame_timings();
 void error_callback(int error, const char *description);
-void update_instances(char *str);
+int update_instances(char *str);
 
 char *read_entire_file(const char *filename);
 int compile_shader(const char *file_path, GLuint shader_ID);
 GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path);
+
+
+unsigned int seed = 123;
+double rng() {
+    seed *= 16807;
+    return seed / (double)0x100000000ULL;
+}
 
 int main()
 {
@@ -51,15 +58,41 @@ int main()
     setup();
 
     while (!glfwWindowShouldClose(window)) {
-        calculate_frame_timings();
-
-        char str[128];
-        sprintf(str, "last frame time = %.3fms\n  abcdefghijklmnopqrstuvwxuz0123456789", last_frame_time*1000.0);
-        update_instances(str);
-
         glfwPollEvents();
 
-        draw();
+        calculate_frame_timings();
+
+        char str[max_instances];
+        sprintf(str, "last frame time = %.3fms\n", last_frame_time*1000.0);
+        
+        // add a line of all glyphs in order
+        int start = strlen(str);
+        for (int i = 0; i < 'A'-32; i++) {
+            str[start++] = 32+i;
+        }
+        str[start++] = '\n';
+        for (int i = 'A'-32; i < 'a'-32; i++) {
+            str[start++] = 32+i;
+        }
+        str[start++] = '\n';
+        for (int i = 'a'-32; i < 95; i++) {
+            str[start++] = 32+i;
+        }
+        str[start++] = '\n';
+
+        seed = 123;
+
+        // add random glyphs
+        for (int j = 0; j < 7; j++) {
+            for (int i = 0; i < 40; i++) {
+                str[start++] = 32 + ((int)(95*rng() + 6.0*glfwGetTime()*(0.5 + rng())) % 95);
+            }
+            str[start++] = '\n';
+        }
+        str[start++] = '\0';
+
+        int count = update_instances(str);
+        draw(count);
 
         glfwSwapBuffers(window);
     }
@@ -78,7 +111,9 @@ void init()
 
     glfwSetErrorCallback(error_callback);
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    // @NOTE: you don't want multisampling when doing the fonts, as you might get artifacts if you scale down too much
+    // due to how multisampling works. 
+    //glfwWindowHint(GLFW_SAMPLES, 4); 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -129,16 +164,16 @@ void setup()
 
     glGenBuffers(1, &vertex_buffer_quad);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_quad);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*num_vertices, vertex_buffer_pos_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_buffer_pos_data), vertex_buffer_pos_data, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glVertexAttribDivisor(0, 0); // not instanced: resets every instance
 
     // get font data
-    int font_bitmap_width = 512;
-    int font_bitmap_height = 256;
-    int font_size = 34.0;
+    int font_bitmap_width = 1024;
+    int font_bitmap_height = 1024;
+    int font_size = 64.0;
 
     int ttf_size_max = 1e6;
     unsigned char *ttf_buffer = malloc(ttf_size_max); // sufficient size for consola.ttf
@@ -154,6 +189,16 @@ void setup()
     stbtt_PackSetOversampling(&pc, 1, 1);
     stbtt_PackFontRange(&pc, ttf_buffer, 0, font_size, 32, 96, cdata);
     stbtt_PackEnd(&pc);
+
+    int max_y = 0;
+    for (int i = 0; i < 95; i++) {
+
+        if (cdata[i].y1 > max_y) {
+            max_y = cdata[i].y1;
+        }
+    }
+    font_bitmap_height = max_y;
+
 
     // calculate vertical font metrics
     stbtt_fontinfo info;
@@ -171,7 +216,7 @@ void setup()
     free(ttf_buffer);
 
     // instance VBO
-    max_instances = 100;
+    max_instances = 10000;
     num_instances = 0;
 
     glGenBuffers(1, &vertex_buffer_instances);
@@ -187,8 +232,8 @@ void setup()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_bitmap);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, font_bitmap_width, font_bitmap_height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
@@ -268,13 +313,13 @@ void setup()
     glUniform1f(glGetUniformLocation(program, "offset_firstline"), linedist-linegap);
 }
 
-void update_instances(char *str)
+int update_instances(char *str)
 {
     int len = strlen(str);
 
     if (len > max_instances) {
         printf("Error: string too long. Returning\n");
-        return;
+        return 0;
     } 
 
     GLfloat vertex_buffer_instances_data[max_instances*4];
@@ -301,18 +346,21 @@ void update_instances(char *str)
         X += cdata[code_base].xadvance;
         ctr++;
     }    
-    num_instances = ctr;
 
     glBindVertexArray(vertex_array_object);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_instances);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float)*4*ctr, vertex_buffer_instances_data);
+
+    return ctr;
 }
 
-void draw()
+void draw(int count)
 {
     glClear(GL_COLOR_BUFFER_BIT);
     
     glUseProgram(program);
+
+    // uniforms that might change
     glUniform1f(glGetUniformLocation(program, "scale_factor"), 1.0);
     glUniform2f(glGetUniformLocation(program, "string_offset"), 0.0, 0.0);
     glUniform2f(glGetUniformLocation(program, "resolution_window"), resx, resy);
@@ -326,7 +374,7 @@ void draw()
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_1D, texture_colors);
 
-    glDrawArraysInstanced(GL_TRIANGLES, 0, num_vertices, num_instances);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, num_vertices, count);
 }
 
 

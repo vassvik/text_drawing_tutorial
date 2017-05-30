@@ -15,13 +15,19 @@ int main()
 {
     // we move all the initialization step into a function for brevity
     init();
+    
+    void (*glClear)(GLbitfield) = (void (*)(GLbitfield))glfwGetProcAddress("glClear");
+    void (*glClearColor)(GLfloat, GLfloat, GLfloat, GLfloat) = (void (*)(GLfloat, GLfloat, GLfloat, GLfloat))glfwGetProcAddress("glClearColor");
 
+    glClearColor(1.0, 0.0, 0.0, 1.0);
     while (!glfwWindowShouldClose(window)) {
         // we add a timings functions, to calcualate the time it takes 
         // to draw each frame. We will use this for benchmarking later
         calculate_frame_timings();
 
         glfwPollEvents();
+
+        glClear(GL_COLOR_BUFFER_BIT); // actually clear the window
         glfwSwapBuffers(window);
     }
 

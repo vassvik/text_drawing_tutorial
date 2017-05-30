@@ -8,8 +8,11 @@
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
-void error_callback(int error, const char* description);
-
+// this function is called internally by GLFW whenever an error occur.
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s (%d)\n", description, error);
+}
 int main()
 {
     // initialize all the internal state of GLFW
@@ -22,7 +25,7 @@ int main()
     glfwSetErrorCallback(error_callback);
 
     // create the window
-    window = glfwCreateWindow(resx, resy, "Title", NULL, NULL);
+    window = glfwCreateWindow(resx, resy, "Checkpoint 1: Creating a window.", NULL, NULL);
 
     // check if the opening of the window failed whatever reason
     // and clean up
@@ -52,10 +55,4 @@ int main()
     glfwTerminate();
     
     return 0;
-}
-
-// this function is called internally by GLFW whenever an error occur.
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s (%d)\n", description, error);
 }

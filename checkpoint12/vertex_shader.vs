@@ -23,8 +23,8 @@ void main()
     // scale offsets to pixels:
     q2 *= vec4(resolution_bitmap, resolution_bitmap);
     
-    // apply the offset that we sent in the instanced buffer
-    vec2 p = vertexPosition*q2.zw + q2.xy;           // offset and scale it properly relative to baseline
+    // vertexPosition is a [0,1]x[0,1] square ("model space")
+    vec2 p = vertexPosition*q2.zw + q2.xy;           // scale and offset properly relative to baseline
     p *= vec2(1.0, -1.0);                            // flip y, since texture is upside-down
     p.y -= offset_firstline;                         // make sure the upper-left corner of the string is in the upper-left corner of the screen
     p *= scale_factor;                               // scale relative to font size
@@ -40,6 +40,7 @@ void main()
 
     // pass the uv's
     uv = q.xy + vertexPosition*q.zw;
+    uv = vertexPosition;
 
     // pass on the color index to the fragment shader
     color_index = vertexInstance.w; // fourth component
