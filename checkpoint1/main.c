@@ -38,8 +38,8 @@ int main()
     // so we set the newly created on as "current"
     glfwMakeContextCurrent(window);
 
-    // disable v-sync for now, if possible
-    glfwSwapInterval(0);
+    // Enable v-sync for now, if possible
+    glfwSwapInterval(1);
 
     // main loop
     while (!glfwWindowShouldClose(window)) {

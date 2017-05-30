@@ -8,6 +8,15 @@ The code presented here is mostly boilerplate -- it's code you'll use in every p
 
 The result is a boring black window, but it's something!
 
+
+
+### Screenshot
+
+This should result in:
+
+![illustration!](http://i.imgur.com/HgO4s9o.png)
+
+
 ## Compiling
 
 ### GCC (Linux, or MSYS2 in Windows)
@@ -22,11 +31,6 @@ To compile and link with `cl` (make sure `shell.bat` is executed from the parent
 cl main.c -I..\include -L..\lib ..\lib\glfw3dll.lib
 ```
 
-### Screenshot
-
-This should result in:
-
-![illustration!](http://i.imgur.com/HgO4s9o.png)
 
 ### Dependencies
 There is a single dependency, [GLFW](http://www.glfw.org/). If you're in linux or using MSYS2 in Windows, you have to install it. You'll find the latest version in your local repository. 
