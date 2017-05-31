@@ -8,7 +8,9 @@ The most direct way to access these functions pointers is to use OS functionalit
 
 We'll later use an external "library" to grab all the relevant functions based on which OpenGL version we want instead of grabbing only the functions we need as we do here. But for now, we'll keep it simple.
 
-We will only use two functions, `glClearColor` to set the background color, and `glClear` to actually clear the screen to this color each frame.
+We will only use two functions:
+ - `glClearColor` to set the background color, and 
+ - `glClear` to actually clear the screen to this color each frame.
 
 
 
