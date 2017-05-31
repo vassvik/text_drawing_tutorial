@@ -12,7 +12,7 @@ We will only use two functions, `glClearColor` to set the background color, and 
 
 
 
-Note: Some legacy OpenGL functions can be accessed by linking to opengl32.lib, but these are restricted to OpenGL version 1.3 and below. glfwGetProcAddress can also be used to grab these, so we do that instead of linking to another library. 
+**Note:** Some legacy OpenGL functions can be accessed by linking to opengl32.lib, but these are restricted to OpenGL version 1.3 and below. glfwGetProcAddress can also be used to grab these, so we do that instead of linking to another library. 
 
 ### Screenshot
 
