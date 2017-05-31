@@ -6,7 +6,7 @@ Getting access to OpenGL functions is unfortunately not a trivial matter, primar
 
 The most direct way to access these functions pointers is to use OS functionality (`wglGetProcAddress` in Windows, `glxGetProcAddress` in Linux), but since we use GLFW we can use its own wrapper (`glfwGetProcAddress`) around these functions, so that we can use the same code for any OS that support GLFW. 
 
-We'll later use an external "library" to grab all the relevant functions based on which OpenGL version we want instead of grabbing only the functions we need as we do here. But for now, we'll keep it simple.
+We'll later use another tiny library to grab all the relevant functions based on which OpenGL version we want instead of grabbing only the functions we need as we do here. But for now, we'll keep it simple.
 
 We will only use two functions:
  - `glClearColor` to set the background color, and 
@@ -43,6 +43,6 @@ Output from [cloc](https://github.com/AlDanial/cloc):
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-C                                1             19             18             66
+C                                1             15              4             45
 -------------------------------------------------------------------------------
 ```
