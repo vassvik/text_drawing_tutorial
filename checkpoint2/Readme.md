@@ -1,6 +1,6 @@
 # Checkpoint 2 -- Using OpenGL functions
 
-Starting from checkpoint 1, with unnecessary explanatory comments removed for brevity's sake.
+Starting from checkpoint 1, with some slight reordering. 
 
 Getting access to OpenGL functions is unfortunately not a trivial matter, primarily due to how vendor extensions and different versions works. Most OpenGL functions have to be accessed dynamically at runtime from either opengl32.dll (in Windows), or libGL.so (in Linux). These functions can be assigned to local variables called function pointers that you can use as any other function.
 
