@@ -7,7 +7,7 @@
 GLFWwindow* window;
 double resx = 640, resy = 480;
 
-void init();
+int init();
 void error_callback(int error, const char* description);
 
 int main()
@@ -15,7 +15,7 @@ int main()
     // we move all the initialization step into a function for brevity
     if (!init()) {
         printf("Could not init. Exiting\n");
-        return;
+        return -1;
     }
     
     // function pointer notation might seem quite daunting at first...
@@ -42,21 +42,20 @@ int init()
 {
     if (!glfwInit()) {
         fprintf(stderr, "Error initializing GLFW\n");
-        return -1;
+        return 0;
     }
 
     glfwSetErrorCallback(error_callback);
 
-    if (!window) {
     window = glfwCreateWindow(resx, resy, "Checkpoint 2: Using OpenGL functions.", NULL, NULL);
+    if (!window) {
         glfwTerminate();
-        return -2;
+        return 0;
     }
 
     glfwMakeContextCurrent(window); 
     glfwSwapInterval(1);
-
-    return 0; // success
+    return 1; // success
 }
 
 void error_callback(int error, const char* description)

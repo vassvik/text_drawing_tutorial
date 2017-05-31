@@ -11,11 +11,14 @@ We'll later use an external "library" to grab all the relevant functions based o
 We will only use two functions, `glClearColor` to set the background color, and `glClear` to actually clear the screen to this color each frame.
 
 
+
+Note: Some legacy OpenGL functions can be accessed by linking to opengl32.lib, but these are restricted to OpenGL version 1.3 and below. glfwGetProcAddress can also be used to grab these, so we do that instead of linking to another library. 
+
 ### Screenshot
 
 This should result in:
 
-![illustration!](http://i.imgur.com/HgO4s9o.png)
+![illustration!](http://i.imgur.com/qgsGSRe.png)
 
 ## Compiling
 
