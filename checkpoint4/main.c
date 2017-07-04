@@ -114,7 +114,7 @@ void setup()
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*num_vertices, vertex_buffer_pos_data, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glVertexAttribPoitner(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // and also create another attribute that's used to determine the color
     // each vertex has the same color index attribute

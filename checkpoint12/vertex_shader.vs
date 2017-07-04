@@ -40,7 +40,6 @@ void main()
 
     // pass the uv's
     uv = q.xy + vertexPosition*q.zw;
-    uv = vertexPosition;
 
     // pass on the color index to the fragment shader
     color_index = vertexInstance.w; // fourth component
