@@ -1161,14 +1161,14 @@ static void load_GL_VERSION_3_0(GLADloadproc load) {
 	if(!GLAD_GL_VERSION_3_0) return;
 	glad_glColorMaski = (PFNGLCOLORMASKIPROC)load("glColorMaski");
 	glad_glGetBooleani_v = (PFNGLGETBOOLEANI_VPROC)load("glGetBooleani_v");
-	glad_glGetIntegeri_v = (PFNGLGETINTEGERI_VPROC)load("glGetIntegeri_v");
+	glad_glGetIntegeri_v = (PFNGLGETINTEGERI_VPROC)load("glGetIntegeri_v"); // @WARNING: THIS ONE IS IN 3_1 TOO!
 	glad_glEnablei = (PFNGLENABLEIPROC)load("glEnablei");
 	glad_glDisablei = (PFNGLDISABLEIPROC)load("glDisablei");
 	glad_glIsEnabledi = (PFNGLISENABLEDIPROC)load("glIsEnabledi");
 	glad_glBeginTransformFeedback = (PFNGLBEGINTRANSFORMFEEDBACKPROC)load("glBeginTransformFeedback");
 	glad_glEndTransformFeedback = (PFNGLENDTRANSFORMFEEDBACKPROC)load("glEndTransformFeedback");
-	glad_glBindBufferRange = (PFNGLBINDBUFFERRANGEPROC)load("glBindBufferRange");
-	glad_glBindBufferBase = (PFNGLBINDBUFFERBASEPROC)load("glBindBufferBase");
+	glad_glBindBufferRange = (PFNGLBINDBUFFERRANGEPROC)load("glBindBufferRange"); // @WARNING: THIS ONE IS IN 3_1 TOO!
+	glad_glBindBufferBase = (PFNGLBINDBUFFERBASEPROC)load("glBindBufferBase"); // @WARNING: THIS ONE IS IN 3_1 TOO!
 	glad_glTransformFeedbackVaryings = (PFNGLTRANSFORMFEEDBACKVARYINGSPROC)load("glTransformFeedbackVaryings");
 	glad_glGetTransformFeedbackVarying = (PFNGLGETTRANSFORMFEEDBACKVARYINGPROC)load("glGetTransformFeedbackVarying");
 	glad_glClampColor = (PFNGLCLAMPCOLORPROC)load("glClampColor");
