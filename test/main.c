@@ -63,7 +63,7 @@ void init()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macs
+    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for macs
 
     window = glfwCreateWindow(resx, resy, "Title", NULL, NULL);
     if (!window) {
@@ -93,58 +93,6 @@ void setup()
     glGenVertexArrays(1, &vertex_array_object);
     glBindVertexArray(vertex_array_object);
 
-    // create vbo for vertex position, 2 quads (4 triangles)
-    num_vertices = 12;
-    GLfloat vertex_buffer_pos_data[] = {
-       -0.8f, -0.8f, // left quad, first triangle (lower left)
-       -0.1f, -0.8f,
-       -0.8f,  0.8f,
-
-       -0.8f,  0.8f, // left quad, second triangle (upper right)
-       -0.1f, -0.8f,
-       -0.1f,  0.8f,
-
-        0.1f, -0.8f, // second quad, first triangle (lower left)
-        0.8f, -0.8f,
-        0.1f,  0.8f,
-
-        0.1f,  0.8f, // second quad, second triangle (upper right)
-        0.8f, -0.8f,
-        0.8f,  0.8f,
-    };
-
-    glGenBuffers(1, &vertex_buffer_object_pos);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_pos);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*num_vertices, vertex_buffer_pos_data, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-    // create vbo for vertex uvs
-    GLfloat vertex_buffer_uv_data[] = {
-        0.0f, 0.0f, // left quad, first triangle (lower left)
-        0.5f, 0.0f,  
-        0.0f, 1.0f, 
-        
-        0.0f, 1.0f, // left quad, second triangle (upper right)
-        0.5f, 0.0f, 
-        0.5f, 1.0f, 
-        
-        0.5f, 0.0f, // second quad, first triangle (lower left)
-        1.0f, 0.0f, 
-        0.5f, 1.0f, 
-        
-        0.5f, 1.0f, // second quad, second triangle (upper right)
-        1.0f, 0.0f, 
-        1.0f, 1.0f, 
-    };
-
-    glGenBuffers(1, &vertex_buffer_object_uv);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object_uv);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*num_vertices, vertex_buffer_uv_data, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
     // create 2D texture
     int texture_width = 4;
@@ -193,14 +141,26 @@ void draw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     
-    glUseProgram(program);
-    glBindVertexArray(vertex_array_object);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
+    
+    glBindVertexArray(vertex_array_object);
 
-    glDrawArrays(GL_TRIANGLES, 0, num_vertices);
+    glUseProgram(program);
+
+    glUniform2f(glGetUniformLocation(program, "p0"), -0.8, -0.8);
+    glUniform2f(glGetUniformLocation(program, "p1"), -0.2,  0.8);
+    glUniform2f(glGetUniformLocation(program, "uv0"), 0.0, 0.0);
+    glUniform2f(glGetUniformLocation(program, "uv1"), 0.5, 1.0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glUniform2f(glGetUniformLocation(program, "p0"),  0.2, -0.8);
+    glUniform2f(glGetUniformLocation(program, "p1"),  0.8,  0.8);
+    glUniform2f(glGetUniformLocation(program, "uv0"), 0.5, 0.0);
+    glUniform2f(glGetUniformLocation(program, "uv1"), 1.0, 1.0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
+
 
 char *read_entire_file(const char *filename) {
     FILE *f = fopen(filename, "rb");
